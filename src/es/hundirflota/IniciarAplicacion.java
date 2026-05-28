@@ -4,7 +4,7 @@ import static es.genesis.utilidades.Impresion.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+import static es.genesis.utilidades.Colores.*;
 
 
 
@@ -62,7 +62,7 @@ public class IniciarAplicacion {
 	
 	//metodo para pintar los barcos
    public static void mostrarTablero(int [][] tablero) {
-	   imprimirln("\n=== TABLERO DE JUEGO ===");
+	   imprimirln(WHITE_BACKGROUND_BRIGHT +"\n=== HUNDIR LA FLOTA  ===");
 		//recorrido del array
 		for(int filas = 0; filas < tablero.length; filas++) {
 			for(int columnas = 0; columnas <tablero[filas].length; columnas++) {
@@ -70,21 +70,21 @@ public class IniciarAplicacion {
 				//System.out.print(tablero[filas][columnas]+ " ");
 				
 				int valor = tablero[filas][columnas];
-				if(valor == 0)imprimir(" - ");
-				else if( valor == 1) imprimir(" 1 "); //Barco
-				else if( valor == 2) imprimir(" X ");// impacto
-				else if( valor == -1) imprimir(" 0 "); // disparo
+				if(valor == 0)imprimir(ANSI_BLUE+" ~ ");
+				else if( valor == 1) imprimir(ANSI_YELLOW+" 🚢 "); //Barco
+				else if( valor == 2) imprimir(ANSI_RED+" 💥 ");// impacto
+				else if( valor == -1) imprimir(ANSI_RED+" ❌ "); // disparo
 			}
 			System.out.println();
 		}
 		
-		imprimirln("\n======================================");
+		imprimirln(ANSI_RESET+"\n======================================");
    }
 
    
    
    //metodo de prueba para mostrar los barcos 
-   public static void colocarBarcos(int [][] tablero) {
+   private static void colocarBarcos(int [][] tablero) {
 	   // Establecer el tamaño del barco
 	   imprimirln(" Introduce el tamaño del barco (1-4 casillas)");
 	 int tamano = teclado.nextInt();
@@ -164,7 +164,7 @@ private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna
     }
 }
    //metodoMenu
-   public static void ejecutarMenu(int [][] tablero) {
+   private static void ejecutarMenu(int [][] tablero) {
 	    
 		cabeceraMenu = "      ----------------\n"+
 					   "       	MENU PRINCIPAL DE HUNDIR LA FLOTA \n"+
@@ -195,7 +195,7 @@ private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna
    }
    
    
-   public static void ejecutarOpcion(int opcion, int [][] tablero) {
+   private static void ejecutarOpcion(int opcion, int [][] tablero) {
 	   switch(opcion) {
 	    case 1: mostrarTablero(tablero); break;
 		case 2: colocarBarcos(tablero);break;
@@ -211,7 +211,7 @@ private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna
    
    
    //metodo para hundir el barco 
-   public static void realizarDisparo(int [][] tablero) {
+   private static void realizarDisparo(int [][] tablero) {
 	   
 	   //introducimos las coordenadas
 	   imprimirln("Introduce la posición de la  fila: casillas (0-9)");
@@ -249,7 +249,7 @@ private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna
    
    
    
-   public static boolean barcoHundido(int[][] tablero) {
+   private static boolean barcoHundido(int[][] tablero) {
 	   for(int i = 0; i < tablero.length; i++) {
 		   for(int j = 0; j < tablero.length; j++) {
 			   if(tablero[i][j] == 1) {
