@@ -28,12 +28,12 @@ public class IniciarAplicacion {
 		
 		
 		
-		//2. rellenar por ceros
-		inicializarTablero(barcos);
-		//3.Colocación de los barcs
-		colocarBarcos(barcos);
 		//4.Menu
 		ejecutarMenu(barcos);
+		//2. rellenar por ceros
+		//inicializarTablero(barcos);
+		//3.Colocación de los barcs
+		//colocarBarcos(barcos);
 	}
 		
 		
@@ -44,7 +44,7 @@ public class IniciarAplicacion {
 		
 	
 	//metodo para rellenar 
-	public static void inicializarTablero(int [][] tablero) {
+	/*public static void inicializarTablero(int [][] tablero) {
 		//recorrido del array
 		for(int filas = 0; filas < tablero.length; filas++) {
 			for(int columnas = 0; columnas <tablero[filas].length; columnas++) {
@@ -54,7 +54,7 @@ public class IniciarAplicacion {
 			//System.out.println();
 		}
 		
-	}
+	}*/
 	
 	//fin de inicializarTablero
 	
@@ -66,8 +66,9 @@ public class IniciarAplicacion {
 		//recorrido del array
 		for(int filas = 0; filas < tablero.length; filas++) {
 			for(int columnas = 0; columnas <tablero[filas].length; columnas++) {
-				tablero[filas][columnas] = 0;
-				System.out.print(tablero[filas][columnas]+ " ");
+				//tablero[filas][columnas] = 0; PONE LA MATRIZ A 0
+				//System.out.print(tablero[filas][columnas]+ " ");
+				System.out.print((tablero[filas][columnas] == 0 ? " - " : "B") + " ");
 			}
 			System.out.println();
 		}
@@ -77,14 +78,86 @@ public class IniciarAplicacion {
 
    
    
-   //metodo de prueba para mostrar los barcos de manera inicial
+   //metodo de prueba para mostrar los barcos 
    public static void colocarBarcos(int [][] tablero) {
-	 tablero[0][9] = 1;
-	 tablero[1][1] = 1;
-   }
+	   // Establecer el tamaño del barco
+	 System.out.println(" Introduce el tamaño del barco (1-4 casillas)");
+	 int tamano = teclado.nextInt();
+	 if (tamano < 1 || tamano > 4){
+		 System.out.println("Tamaño inválido");
+		 return;
+	 }
+	 
+	 
+	 //Orientacion del barco 
+	 System.out.println("Introduce orientacion (H = Horizontal) , (V = Vertical)");
+	 char orientacion = teclado.next().toUpperCase().charAt(0);
+	 if(orientacion != 'H' && orientacion  != 'V') {
+		 System.out.println("Orientacion inválida");
+		 return;
+	 }
+	 
+	 System.out.print("Introduce la fila (0-9):  ");
+	 int fila = teclado.nextInt();
+	 System.out.print("Introduce la columna (0-9):  ");
+	 int columna = teclado.nextInt();
+	 
+	 // validacion para evitar la solapacion
+	 
+	 // 4. Validar si es posible colocarlo
+	    if (posicionValida(tablero, fila, columna, tamano, orientacion)) {
+	        // 5. Si es válido, se dibuja en la matriz cambiando los 0 por 1
+	        insertarBarcoEnMatriz(tablero, fila, columna, tamano, orientacion);
+	        System.out.println("Barco colocado!");
+	    } else {
+	        System.out.println(" No se puede colocar el barco.POSICIÓN INVÁLIDA!");
+	    }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+  }
 
    
+   //metodo para validar posicion del barco
+   private static boolean posicionValida(int[][] tablero, int fila, int columna, int tamano, char orientacion) {
+	   // Comprobar coordenadas iniciales básicas
+	    if (fila < 0 || fila >= 10 || columna < 0 || columna >= 10) return false;
+
+	    if (orientacion == 'H') {
+	        // ¿Se sale por la derecha?
+	        if (columna + tamano > 10) return false;
+	        // ¿Choca con otro barco?
+	        for (int i = 0; i < tamano; i++) {
+	            if (tablero[fila][columna + i] != 0) return false;
+	        }
+	    } else if (orientacion == 'V') {
+	        // ¿Se sale por abajo?
+	        if (fila + tamano > 10) return false;
+	        // ¿Choca con otro barco?
+	        for (int i = 0; i < tamano; i++) {
+	            if (tablero[fila + i][columna] != 0) return false;
+	        }
+	    }
+	    return true;
+   }
    
+   
+// Método que realiza la escritura final en la matriz
+private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna, int tamano, char orientacion) {
+    if (orientacion == 'H') {
+        for (int i = 0; i < tamano; i++) {
+            tablero[fila][columna + i] = 1; 
+        }
+    } else if (orientacion == 'V') {
+        for (int i = 0; i < tamano; i++) {
+            tablero[fila + i][columna] = 1;
+        }
+    }
+}
    //metodoMenu
    public static void ejecutarMenu(int [][] tablero) {
 	    
@@ -118,8 +191,8 @@ public class IniciarAplicacion {
    
    public static void ejecutarOpcion(int opcion, int [][] tablero) {
 	   switch(opcion) {
-	   case 1: mostrarTablero(tablero); break;
-		case 2: System.out.println("Colocar el barco");break;
+	    case 1: mostrarTablero(tablero); break;
+		case 2: colocarBarcos(tablero);break;
 		case 3: System.out.println("Realizar disparo");break;
 		case 4: System.out.println("añadir otro jugador");break;
 		case 0: System.out.println("Fin del programa...\n"); return;
