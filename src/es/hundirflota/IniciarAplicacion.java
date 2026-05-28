@@ -62,18 +62,23 @@ public class IniciarAplicacion {
 	
 	//metodo para pintar los barcos
    public static void mostrarTablero(int [][] tablero) {
-	   System.out.println("\n=== TABLERO DE JUEGO ===");
+	   imprimirln("\n=== TABLERO DE JUEGO ===");
 		//recorrido del array
 		for(int filas = 0; filas < tablero.length; filas++) {
 			for(int columnas = 0; columnas <tablero[filas].length; columnas++) {
 				//tablero[filas][columnas] = 0; PONE LA MATRIZ A 0
 				//System.out.print(tablero[filas][columnas]+ " ");
-				System.out.print((tablero[filas][columnas] == 0 ? " - " : "B") + " ");
+				
+				int valor = tablero[filas][columnas];
+				if(valor == 0)imprimir(" - ");
+				else if( valor == 1) imprimir(" 1 "); //Barco
+				else if( valor == 2) imprimir(" X ");// impacto
+				else if( valor == -1) imprimir(" 0 "); // disparo
 			}
 			System.out.println();
 		}
 		
-		System.out.println("\n======================================");
+		imprimirln("\n======================================");
    }
 
    
@@ -81,25 +86,25 @@ public class IniciarAplicacion {
    //metodo de prueba para mostrar los barcos 
    public static void colocarBarcos(int [][] tablero) {
 	   // Establecer el tamaño del barco
-	 System.out.println(" Introduce el tamaño del barco (1-4 casillas)");
+	   imprimirln(" Introduce el tamaño del barco (1-4 casillas)");
 	 int tamano = teclado.nextInt();
 	 if (tamano < 1 || tamano > 4){
-		 System.out.println("Tamaño inválido");
+		 imprimirln("Tamaño inválido");
 		 return;
 	 }
 	 
 	 
 	 //Orientacion del barco 
-	 System.out.println("Introduce orientacion (H = Horizontal) , (V = Vertical)");
+	 imprimirln("Introduce orientacion (H = Horizontal) , (V = Vertical)");
 	 char orientacion = teclado.next().toUpperCase().charAt(0);
 	 if(orientacion != 'H' && orientacion  != 'V') {
-		 System.out.println("Orientacion inválida");
+		 imprimirln("Orientacion inválida");
 		 return;
 	 }
 	 
-	 System.out.print("Introduce la fila (0-9):  ");
+	 imprimir("Introduce la fila (0-9):  ");
 	 int fila = teclado.nextInt();
-	 System.out.print("Introduce la columna (0-9):  ");
+	 imprimir("Introduce la columna (0-9):  ");
 	 int columna = teclado.nextInt();
 	 
 	 // validacion para evitar la solapacion
@@ -108,9 +113,9 @@ public class IniciarAplicacion {
 	    if (posicionValida(tablero, fila, columna, tamano, orientacion)) {
 	        // 5. Si es válido, se dibuja en la matriz cambiando los 0 por 1
 	        insertarBarcoEnMatriz(tablero, fila, columna, tamano, orientacion);
-	        System.out.println("Barco colocado!");
+	        imprimirln("Barco colocado!");
 	    } else {
-	        System.out.println(" No se puede colocar el barco.POSICIÓN INVÁLIDA!");
+	    	imprimirln(" No se puede colocar el barco.POSICIÓN INVÁLIDA!");
 	    }
 	 
 	 
@@ -164,8 +169,8 @@ private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna
 		cabeceraMenu = "      ----------------\n"+
 					   "       	MENU PRINCIPAL DE HUNDIR LA FLOTA \n"+
 					   "      ----------------\n";
-		opcionesMenu.add("    1.Iniciar el tablero\n");
-		opcionesMenu.add("    2.Colocar el barco\n");
+		opcionesMenu.add("    1.Mostrar el tablero\n");
+		opcionesMenu.add("    2.Colocar un  barco\n");
 		opcionesMenu.add("    3.Realizar un disparo\n");
 		opcionesMenu.add("    4.Añadir otro jugador\n");
 		opcionSalir =   ("    0.Salir\n");
@@ -173,12 +178,12 @@ private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna
 		
 		int opcion;
 		do {
-			System.out.println(cabeceraMenu);
+			imprimirln(cabeceraMenu);
 			for(String opc : opcionesMenu) {
-				System.out.println(opc);
+				imprimirln(opc);
 			}
-			System.out.print(opcionSalir);
-			System.out.print("Selecciona una opción: ");
+			imprimir(opcionSalir);
+			imprimir("Selecciona una opción: ");
 			
 			opcion = teclado.nextInt();
 			ejecutarOpcion(opcion, tablero);
@@ -189,14 +194,69 @@ private static void insertarBarcoEnMatriz(int[][] tablero, int fila, int columna
 		
    }
    
+   
    public static void ejecutarOpcion(int opcion, int [][] tablero) {
 	   switch(opcion) {
 	    case 1: mostrarTablero(tablero); break;
 		case 2: colocarBarcos(tablero);break;
-		case 3: System.out.println("Realizar disparo");break;
-		case 4: System.out.println("añadir otro jugador");break;
+		case 3: realizarDisparo(tablero);break;
+		case 4: System.out.println("Añadir otro jugador");break;
 		case 0: System.out.println("Fin del programa...\n"); return;
-		default: imprimir("Opción inválida.\n");
+		default: imprimirln("Opción inválida.\n");
 	   }
+   }
+   
+   
+   
+   
+   
+   //metodo para hundir el barco 
+   public static void realizarDisparo(int [][] tablero) {
+	   
+	   //introducimos las coordenadas
+	   imprimirln("Introduce la posición de la  fila: casillas (0-9)");
+	   int fila = teclado.nextInt();
+	   
+	   imprimir("Introduce la posición de la columna: casillas  (0-9)");
+	   int columna = teclado.nextInt();
+	   
+	   //validamos el disparo
+	   
+	   if(fila < 0 ||fila >= 10 || columna < 0 || columna >= 10){
+		   System.out.println("El disparo es inválido.");
+	   }
+	   
+	   
+	   if(tablero[fila][columna] == 1) {
+		   tablero[fila][columna] = 2;
+		   imprimir(" !!!!!  BARCO TOCADO  !!!");
+		   
+		   
+		   //comprobacion
+		   if(barcoHundido(tablero)) {
+			   imprimirln("BARCO HUNDIDO!!");
+		   }
+		   
+	   }else if(tablero[fila][columna] == 0) {
+		   tablero[fila][columna] = -1;
+		   imprimirln("AGUA");
+	   }else {
+		   imprimirln("Ya has disparado aqui");
+	   }
+	 
+	   
+   }
+   
+   
+   
+   public static boolean barcoHundido(int[][] tablero) {
+	   for(int i = 0; i < tablero.length; i++) {
+		   for(int j = 0; j < tablero.length; j++) {
+			   if(tablero[i][j] == 1) {
+				   return false;
+			   }
+		   }
+	   }
+	   return true;
    }
 }
